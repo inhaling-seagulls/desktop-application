@@ -2,11 +2,12 @@ import { BASE_URI } from "../constants/api";
 import { Project } from "../models/Project.model";
 //TODO :
 //  Return Message Success or Error / Use try catch
-export function useProject() {
+export function ProjectService() {
   const URI = `${BASE_URI}/projects`;
 
   const all = async () => {
     const response = await fetch(URI);
+    console.log(response);
     return response.json();
   };
 

@@ -2,7 +2,7 @@ import { BASE_URI } from "../constants/api";
 import { Profile } from "../models/Profile.model";
 //TODO :
 //  Return Message Success or Error / Use try catch
-export function useProfile() {
+export function ProfileService() {
   const URI = `${BASE_URI}/profiles`;
 
   const find = async (id: number) => {
