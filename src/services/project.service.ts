@@ -5,14 +5,29 @@ import { Project } from "../models/Project.model";
 export function ProjectService() {
   const URI = `${BASE_URI}/projects`;
 
-  const all = async () => {
-    const response = await fetch(URI);
-    console.log(response);
+  const all = async (): Promise<Project[]> => {
+    const request = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(URI, request);
     return response.json();
   };
 
-  const find = async (id: number) => {
-    const response = await fetch(`${URI}/${id}`);
+  const find = async (id: number): Promise<Project> => {
+    const request = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(`${URI}/${id}`, request);
     return response.json();
   };
 

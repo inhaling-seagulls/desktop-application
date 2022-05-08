@@ -5,8 +5,16 @@ import { Profile } from "../models/Profile.model";
 export function ProfileService() {
   const URI = `${BASE_URI}/profiles`;
 
-  const find = async (id: number) => {
-    const response = await fetch(`${URI}/${id}`);
+  const find = async (id: number): Promise<Profile> => {
+    const request = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(`${URI}/${id}`, request);
     return response.json();
   };
 
