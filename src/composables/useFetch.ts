@@ -6,7 +6,11 @@ type ApiResponse<T> = {
   data: T;
 };
 
-export const useFetch = <T>(endpoint: string, method: Method = "GET", body: T | null = null) => {
+export const useFetch = <T>(
+  endpoint: string,
+  method: Method = "GET",
+  body?: T
+) => {
   const data: Ref<T | null> = ref(null);
   const response: Ref<ApiResponse<T> | null> = ref(null);
   const error: Ref<Error | null> = ref(null);
@@ -21,7 +25,7 @@ export const useFetch = <T>(endpoint: string, method: Method = "GET", body: T | 
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : null,
     })
       .then((res: Response) => {
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
