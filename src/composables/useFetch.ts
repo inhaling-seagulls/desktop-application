@@ -1,10 +1,5 @@
 import { Ref, ref } from "vue";
-import { BASE_URI } from "../constants/api";
-
-type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
-type ApiResponse<T> = {
-  data: T;
-};
+import { BASE_HEADERS, BASE_URI, Method, ApiResponse } from "../constants/api";
 
 export const useFetch = <T>(
   endpoint: string,
@@ -22,8 +17,7 @@ export const useFetch = <T>(
     fetch(`${BASE_URI}/${endpoint}`, {
       method: method,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        ...BASE_HEADERS,
       },
       body: body ? JSON.stringify(body) : null,
     })
