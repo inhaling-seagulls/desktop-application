@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.custom-max-width {
+  width: 1024px;
+  text-align: center;
+}
+
+.custom-header {
+  display: flex;
+  align-items: center;
+}
+
+.flex-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.flex-item {
+  margin: 0 10px;
+}
