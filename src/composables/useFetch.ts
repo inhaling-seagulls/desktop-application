@@ -1,6 +1,7 @@
-import { Ref, ref } from "vue";
+import { inject, Ref, ref } from "vue";
 import { BASE_HEADERS, BASE_URI } from "../constants/api";
 import { ApiResponse } from "../models/ApiResponse.model";
+import { Store } from "../store";
 
 export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
@@ -10,13 +11,18 @@ export const useFetch = <T>(endpoint: string, method: Method = "GET", body?: T) 
   const error: Ref<Error | null> = ref(null);
   const loading: Ref<boolean> = ref(false);
 
+  const store = inject<Store>("store");
+
   const run = async () => {
     loading.value = true;
+
+    console.log(store?.getToken());
 
     fetch(`${BASE_URI}/${endpoint}`, {
       method: method,
       headers: {
         ...BASE_HEADERS,
+        Authorization: `Bearer ${store?.getToken()}`,
       },
       body: body ? JSON.stringify(body) : null,
     })

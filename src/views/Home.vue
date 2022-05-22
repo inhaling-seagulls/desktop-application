@@ -1,15 +1,15 @@
 <style scoped>
-  header {
-    text-align: center;
-    margin: 100px 0 50px;
-  }
+header {
+  text-align: center;
+  margin: 100px 0 50px;
+}
 
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 
 <template>
@@ -38,10 +38,18 @@
               rows="3"
             />
           </div>
-          <button type="submit" class="btn btn-primary float-end mb-3" @click.prevent="login">Se connecter</button>
+          <button
+            type="submit"
+            class="btn btn-primary float-end mb-3"
+            @click.prevent="login"
+          >
+            Se connecter
+          </button>
         </form>
         <div class="text-center">
-          <router-link class="nav-link" to="/register">Pas de compte ?</router-link>
+          <router-link class="nav-link" to="/register"
+            >Pas de compte ?</router-link
+          >
         </div>
       </div>
     </div>
@@ -49,30 +57,30 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, inject } from "vue";
-  import router from '../routes'
+import { defineComponent, inject } from "vue";
+import router from "../routes";
 
-  export default defineComponent({
-    setup() {
-      const store: any = inject("store");
+export default defineComponent({
+  setup() {
+    const store: any = inject("store");
 
-      const click = () => {
-        store.signIn({
-          email: "email@email.fr",
-          password: "123",
-        });
+    const click = () => {
+      store.signIn({
+        email: "email@email.fr",
+        password: "123",
+      });
 
-        console.log(store);
-      };
+      console.log(store);
+    };
 
-      const test = "test";
+    const test = "test";
 
-      return { test, click };
+    return { test, click };
+  },
+  methods: {
+    login() {
+      router.push({ path: "/newprofile" });
     },
-      methods: {
-        login() {
-          router.push({ path : '/newprofile' })
-        }
-      }
-  });
+  },
+});
 </script>
