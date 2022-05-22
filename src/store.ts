@@ -1,9 +1,16 @@
 import { reactive, readonly } from "vue";
 import { BASE_HEADERS, BASE_URI } from "./constants/api";
 import { ApiResponse } from "./models/ApiResponse.model";
-import { User, UserSignIn } from "./models/User.model";
+import { User, UserRegistration, UserSignIn } from "./models/User.model";
 
-type Auth = {
+export type Store = {
+  auth: Auth;
+  signIn: (user: UserSignIn | UserRegistration) => void;
+  signOut: () => void;
+  getToken: () => string | undefined;
+};
+
+export type Auth = {
   user: User | null;
   isLoggedIn: boolean;
   error: Error | null;
@@ -14,6 +21,8 @@ const auth = reactive<Auth>({
   isLoggedIn: false,
   error: null,
 });
+
+const getToken = () => auth.user?.token;
 
 const signIn = (req: UserSignIn) => {
   fetch(`${BASE_URI}/login`, {
@@ -41,7 +50,7 @@ const signOut = () => {
     method: "GET",
     headers: {
       ...BASE_HEADERS,
-      Authorization: `Bearer ${auth.user?.token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   })
     .then((res: Response) => {
@@ -54,4 +63,4 @@ const signOut = () => {
     });
 };
 
-export default { auth: readonly(auth), signIn, signOut };
+export default { auth: readonly(auth), signIn, signOut, getToken };

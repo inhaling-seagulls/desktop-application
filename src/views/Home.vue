@@ -1,5 +1,4 @@
 <template>
-  <p>{{ test }}</p>
   <button @click="click">login</button>
 </template>
 
@@ -12,16 +11,12 @@ export default defineComponent({
 
     const click = () => {
       store.signIn({
-        email: "email@email.fr",
+        email: "test@email.fr",
         password: "123",
       });
-
-      console.log(store);
     };
 
-    const test = "test";
-
-    return { test, click };
+    return { click };
   },
 });
 </script>
