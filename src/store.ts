@@ -1,5 +1,6 @@
 import { reactive, readonly } from "vue";
-import { BASE_HEADERS, BASE_URI, ApiResponse } from "./constants/api";
+import { BASE_HEADERS, BASE_URI } from "./constants/api";
+import { ApiResponse } from "./models/ApiResponse.model";
 import { User, UserSignIn } from "./models/User.model";
 
 type Auth = {
@@ -23,8 +24,7 @@ const signIn = (req: UserSignIn) => {
     body: JSON.stringify(req),
   })
     .then((res: Response) => {
-      if (res.status !== 201)
-        throw new Error(`${res.status} ${res.statusText}`);
+      if (res.status !== 201) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
     .then((json: ApiResponse<User>) => {
@@ -36,4 +36,22 @@ const signIn = (req: UserSignIn) => {
     });
 };
 
-export default { auth: readonly(auth), signIn };
+const signOut = () => {
+  fetch(`${BASE_URI}/logout`, {
+    method: "GET",
+    headers: {
+      ...BASE_HEADERS,
+      Authorization: `Bearer ${auth.user?.token}`,
+    },
+  })
+    .then((res: Response) => {
+      if (res.status !== 204) throw new Error(`${res.status} ${res.statusText}`);
+      auth.user = null;
+      auth.isLoggedIn = false;
+    })
+    .catch((e: Error) => {
+      auth.error = e;
+    });
+};
+
+export default { auth: readonly(auth), signIn, signOut };

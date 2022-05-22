@@ -1,11 +1,10 @@
 import { Ref, ref } from "vue";
-import { BASE_HEADERS, BASE_URI, Method, ApiResponse } from "../constants/api";
+import { BASE_HEADERS, BASE_URI } from "../constants/api";
+import { ApiResponse } from "../models/ApiResponse.model";
 
-export const useFetch = <T>(
-  endpoint: string,
-  method: Method = "GET",
-  body?: T
-) => {
+export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+
+export const useFetch = <T>(endpoint: string, method: Method = "GET", body?: T) => {
   const data: Ref<T | null> = ref(null);
   const response: Ref<ApiResponse<T> | null> = ref(null);
   const error: Ref<Error | null> = ref(null);
