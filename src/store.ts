@@ -1,9 +1,12 @@
 import { reactive, readonly } from "vue";
+import { BASE_HEADERS, BASE_URI } from "./constants/api";
+import { ApiResponse } from "./models/ApiResponse.model";
+import { User, UserSignIn } from "./models/User.model";
 
 type Auth = {
-  user: any;
+  user: User | null;
   isLoggedIn: boolean;
-  error: any;
+  error: Error | null;
 };
 
 const auth = reactive<Auth>({
@@ -12,27 +15,43 @@ const auth = reactive<Auth>({
   error: null,
 });
 
-const signIn = (req: { email: string; password: string }) => {
-  fetch("http://localhost:8000/api/login", {
+const signIn = (req: UserSignIn) => {
+  fetch(`${BASE_URI}/login`, {
     method: "POST",
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      ...BASE_HEADERS,
     },
     body: JSON.stringify(req),
   })
-    .then((res) => {
-      if (res.status !== 201) throw res.statusText;
+    .then((res: Response) => {
+      if (res.status !== 201) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
-    .then((json) => {
-      console.log(json.data);
+    .then((json: ApiResponse<User>) => {
       auth.user = json.data;
       auth.isLoggedIn = true;
     })
-    .catch((e) => {
+    .catch((e: Error) => {
       auth.error = e;
     });
 };
 
-export default { auth: readonly(auth), signIn };
+const signOut = () => {
+  fetch(`${BASE_URI}/logout`, {
+    method: "GET",
+    headers: {
+      ...BASE_HEADERS,
+      Authorization: `Bearer ${auth.user?.token}`,
+    },
+  })
+    .then((res: Response) => {
+      if (res.status !== 204) throw new Error(`${res.status} ${res.statusText}`);
+      auth.user = null;
+      auth.isLoggedIn = false;
+    })
+    .catch((e: Error) => {
+      auth.error = e;
+    });
+};
+
+export default { auth: readonly(auth), signIn, signOut };
