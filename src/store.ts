@@ -5,7 +5,8 @@ import { User, UserRegistration, UserSignIn } from "./models/User.model";
 
 export type Store = {
   auth: Auth;
-  signIn: (user: UserSignIn | UserRegistration) => void;
+  signIn: (user: UserSignIn) => void;
+  signUp: (user: UserRegistration) => void;
   signOut: () => void;
   getToken: () => string | undefined;
 };
@@ -45,6 +46,27 @@ const signIn = (req: UserSignIn) => {
     });
 };
 
+const signUp = (req: UserRegistration) => {
+  fetch(`${BASE_URI}/register`, {
+    method: "POST",
+    headers: {
+      ...BASE_HEADERS,
+    },
+    body: JSON.stringify(req),
+  })
+    .then((res: Response) => {
+      if (res.status !== 201) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    })
+    .then((json: ApiResponse<User>) => {
+      auth.user = json.data;
+      auth.isLoggedIn = true;
+    })
+    .catch((e: Error) => {
+      auth.error = e;
+    });
+};
+
 const signOut = () => {
   fetch(`${BASE_URI}/logout`, {
     method: "GET",
@@ -63,4 +85,4 @@ const signOut = () => {
     });
 };
 
-export default { auth: readonly(auth), signIn, signOut, getToken };
+export default { auth: readonly(auth), signIn, signOut, signUp, getToken };

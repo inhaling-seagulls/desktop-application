@@ -16,8 +16,6 @@ export const useFetch = <T>(endpoint: string, method: Method = "GET", body?: T) 
   const run = async () => {
     loading.value = true;
 
-    console.log(store?.getToken());
-
     fetch(`${BASE_URI}/${endpoint}`, {
       method: method,
       headers: {
