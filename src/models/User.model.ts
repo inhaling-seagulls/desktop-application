@@ -1,6 +1,9 @@
+import { Profile } from "./Profile.model";
+
 export type User = {
   name: string;
   email: string;
+  profile: Profile;
   id?: number;
   token?: string;
 };

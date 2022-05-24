@@ -24,6 +24,8 @@ const auth = reactive<Auth>({
 });
 
 const getToken = () => auth.user?.token;
+const getProfile = () => auth.user?.profile;
+const getProjects = () => auth.user?.profile.projects;
 
 const signIn = (req: UserSignIn) => {
   fetch(`${BASE_URI}/login`, {
@@ -34,7 +36,7 @@ const signIn = (req: UserSignIn) => {
     body: JSON.stringify(req),
   })
     .then((res: Response) => {
-      if (res.status !== 201) throw new Error(`${res.status} ${res.statusText}`);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
     .then((json: ApiResponse<User>) => {
@@ -55,7 +57,7 @@ const signUp = (req: UserRegistration) => {
     body: JSON.stringify(req),
   })
     .then((res: Response) => {
-      if (res.status !== 201) throw new Error(`${res.status} ${res.statusText}`);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
     .then((json: ApiResponse<User>) => {
@@ -85,4 +87,4 @@ const signOut = () => {
     });
 };
 
-export default { auth: readonly(auth), signIn, signOut, signUp, getToken };
+export default { auth: readonly(auth), signIn, signOut, signUp, getToken, getProfile, getProjects };
