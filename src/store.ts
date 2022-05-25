@@ -27,7 +27,7 @@ const getToken = () => auth.user?.token;
 const getProfile = () => auth.user?.profile;
 const getProjects = () => auth.user?.profile.projects;
 
-const signIn = (req: UserSignIn) => {
+const signIn = (req: UserSignIn, callback?: () => void) => {
   fetch(`${BASE_URI}/login`, {
     method: "POST",
     headers: {
@@ -42,13 +42,14 @@ const signIn = (req: UserSignIn) => {
     .then((json: ApiResponse<User>) => {
       auth.user = json.data;
       auth.isLoggedIn = true;
+      if (callback !== undefined) callback();
     })
     .catch((e: Error) => {
       auth.error = e;
     });
 };
 
-const signUp = (req: UserRegistration) => {
+const signUp = (req: UserRegistration, callback?: () => void) => {
   fetch(`${BASE_URI}/register`, {
     method: "POST",
     headers: {
@@ -63,13 +64,14 @@ const signUp = (req: UserRegistration) => {
     .then((json: ApiResponse<User>) => {
       auth.user = json.data;
       auth.isLoggedIn = true;
+      if (callback !== undefined) callback();
     })
     .catch((e: Error) => {
       auth.error = e;
     });
 };
 
-const signOut = () => {
+const signOut = (callback?: () => void) => {
   fetch(`${BASE_URI}/logout`, {
     method: "GET",
     headers: {
@@ -81,6 +83,7 @@ const signOut = () => {
       if (res.status !== 204) throw new Error(`${res.status} ${res.statusText}`);
       auth.user = null;
       auth.isLoggedIn = false;
+      if (callback !== undefined) callback();
     })
     .catch((e: Error) => {
       auth.error = e;
