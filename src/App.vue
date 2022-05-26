@@ -29,21 +29,15 @@
   <router-view />
 </template>
 
-<script lang="ts">
-  import { defineComponent } from "vue";
+<script setup lang="ts">
   import { useRouter } from "vue-router";
   import store from "./store";
 
-  export default defineComponent({
-    setup() {
-      const router = useRouter()
-      const logout = () => {
-        store.signOut(() => {
-          router.push({ path: '/' })
-        })
-      }
-
-      return { store, logout }
-    }
-  });
+  const router = useRouter()
+  
+  const logout = () => {
+    store.signOut(() => {
+      router.push({ path: '/' })
+    })
+  }
 </script>
