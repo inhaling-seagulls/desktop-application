@@ -16,8 +16,8 @@ const router = createRouter({
     { path: "/", name: "home", component: Home },
     { path: "/about", name: "about", component: About, meta: { auth: true } },
     { path: "/register", name: "register", component: Register },
-    { path: "/project", name: "project", component: Project },
-    { path: "/projects", name: "projects", component: Projects },
+    { path: "/project/:id", name: "project", component: Project },
+    { path: "/projects/:page", name: "projects", component: Projects },
     { path: "/newprofile", name: "createprofile", component: CreateProfile },
     {
       path: "/create-project",
