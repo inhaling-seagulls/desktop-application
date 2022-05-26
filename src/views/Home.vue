@@ -62,8 +62,8 @@
   import router from "../routes";
   import store from "../store";
 
-  const email = ref('me@bewiwi.fr')
-  const password = ref('bewiwi')
+  const email = ref('')
+  const password = ref('')
 
   const login = () => {
     store.signIn({

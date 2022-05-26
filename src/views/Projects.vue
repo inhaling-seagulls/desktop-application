@@ -90,7 +90,6 @@
       project.score = score
     }
     projectsWithScore.sort(sort)
-    console.log('Computed?', projectsWithScore)
     return projectsWithScore
   }
 
@@ -114,7 +113,6 @@
   watch(
     page,
     async (newPage) => {
-      console.log('LISTEN', newPage)
       projectsToDisplay.value = projectsWithScore.value.slice((newPage - 1) * 2, (newPage - 1) * 2 + 2)
     }
   )
