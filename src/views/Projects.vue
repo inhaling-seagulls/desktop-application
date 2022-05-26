@@ -54,9 +54,17 @@
   import { BASE_HEADERS } from "../constants/api"
   import store from "../store"
 
-
   const route = useRoute()
   const projectsWithScore = ref()
+
+  const sort = (a : Project, b : Project) : number => {
+    a.score = a.score || 0
+    b.score = b.score || 0
+
+    if (a.score > b.score) return -1
+    if (a.score < b.score) return 1
+    return 0
+  }
 
   const addUntil = (i : number) : number => {
     if (i <= 0) return i * 2
@@ -84,6 +92,7 @@
       }
       project.score = score
     }
+    projectsWithScore.sort(sort)
     console.log('Computed?', projectsWithScore)
     return projectsWithScore
   }
