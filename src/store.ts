@@ -8,24 +8,25 @@ export type Store = {
   signIn: (user: UserSignIn) => void;
   signUp: (user: UserRegistration) => void;
   signOut: () => void;
-  getToken: () => string | undefined;
+  getToken: () => string;
+  fetchMyData: () => User;
 };
 
 export type Auth = {
   user: User | null;
+  token: string | null;
   isLoggedIn: boolean;
   error: Error | null;
 };
 
 const auth = reactive<Auth>({
   user: null,
+  token: null,
   isLoggedIn: false,
   error: null,
 });
 
-const getToken = () => auth.user?.token;
-const getProfile = () => auth.user?.profile;
-const getProjects = () => auth.user?.profile.projects;
+const getToken = (): string => `Bearer ${auth.token}`;
 
 const signIn = (req: UserSignIn, callback?: () => void) => {
   fetch(`${BASE_URI}/login`, {
@@ -39,9 +40,11 @@ const signIn = (req: UserSignIn, callback?: () => void) => {
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
-    .then((json: ApiResponse<User>) => {
-      auth.user = json.data;
+    .then((json: ApiResponse<Auth>) => {
+      auth.token = json.data.token;
       auth.isLoggedIn = true;
+      console.log("IN");
+      console.log(auth);
       if (callback !== undefined) callback();
     })
     .catch((e: Error) => {
@@ -61,8 +64,8 @@ const signUp = (req: UserRegistration, callback?: () => void) => {
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
-    .then((json: ApiResponse<User>) => {
-      auth.user = json.data;
+    .then((json: ApiResponse<Auth>) => {
+      auth.token = json.data.token;
       auth.isLoggedIn = true;
       if (callback !== undefined) callback();
     })
@@ -76,7 +79,7 @@ const signOut = (callback?: () => void) => {
     method: "GET",
     headers: {
       ...BASE_HEADERS,
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: getToken(),
     },
   })
     .then((res: Response) => {
@@ -90,4 +93,28 @@ const signOut = (callback?: () => void) => {
     });
 };
 
-export default { auth: readonly(auth), signIn, signOut, signUp, getToken, getProfile, getProjects };
+const fetchMyData = () => {
+  console.log(getToken());
+  fetch(`${BASE_URI}/me`, {
+    method: "GET",
+    headers: {
+      ...BASE_HEADERS,
+      Authorization: getToken(),
+    },
+  })
+    .then((res: Response) => {
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    })
+    .then((json: ApiResponse<User>) => {
+      auth.user = json.data;
+      auth.isLoggedIn = true;
+      console.log("DATA");
+      console.log(auth);
+    })
+    .catch((e: Error) => {
+      auth.error = e;
+    });
+};
+
+export default { auth: readonly(auth), getToken, signIn, signOut, signUp, fetchMyData };
