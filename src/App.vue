@@ -14,9 +14,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div v-if="false" class="navbar-nav">
+        <div v-if="store.auth.isLoggedIn" class="navbar-nav">
           <router-link class="nav-link" to="/profile">Profil</router-link>
-          <router-link class="nav-link" to="/projects">Projets</router-link>
+          <router-link class="nav-link" to="/projects/1">Projets</router-link>
           <button @click="logout">Logout</button>
         </div>
         <div v-else class="navbar-nav">
@@ -26,21 +26,24 @@
       </div>
     </div>
   </nav>
-  <NavigationForTest />
   <router-view />
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import NavigationForTest from "./components/NavigationForTest.vue";
+  import { defineComponent } from "vue";
+  import { useRouter } from "vue-router";
+  import store from "./store";
 
-export default defineComponent({
-  components: {
-    NavigationForTest,
-  },
-  setup() {},
-  methods: {
-    logout() {},
-  },
-});
+  export default defineComponent({
+    setup() {
+      const router = useRouter()
+      const logout = () => {
+        store.signOut(() => {
+          router.push({ path: '/' })
+        })
+      }
+
+      return { store, logout }
+    }
+  });
 </script>

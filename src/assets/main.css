@@ -24,4 +24,5 @@ body {
 }
 .flex-item {
   margin: 0 10px;
+  text-transform: capitalize;
 }

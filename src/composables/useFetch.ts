@@ -1,17 +1,19 @@
-import { inject, Ref, ref } from "vue";
+import { Ref, ref } from "vue";
 import { BASE_HEADERS, BASE_URI } from "../constants/api";
 import { ApiResponse } from "../models/ApiResponse.model";
-import { Store } from "../store";
+import store from "../store";
 
 export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
-export const useFetch = <T>(endpoint: string, method: Method = "GET", body?: T) => {
+export const useFetch = <T>(
+  endpoint: string,
+  method: Method = "GET",
+  body?: T
+) => {
   const data: Ref<T | null> = ref(null);
   const response: Ref<ApiResponse<T> | null> = ref(null);
   const error: Ref<Error | null> = ref(null);
   const loading: Ref<boolean> = ref(false);
-
-  const store = inject<Store>("store");
 
   const run = async () => {
     loading.value = true;
