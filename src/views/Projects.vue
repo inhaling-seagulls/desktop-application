@@ -5,7 +5,7 @@
     </header>
     <div class="container mt-5">
       <div class="row row-cols-2 mb-5">
-        <div class="col" v-for="project in projectsWithScore" :key="project.name">
+        <div class="col" v-for="project in projectsToDisplay" :key="project.name">
           <div class="card mb-3 h-100">
             <router-link :to="`/project/${project.id}`">
               <div class="row g-0">
@@ -25,37 +25,34 @@
           </div>
         </div>
       </div>
-      <!-- <nav>
+      <nav>
         <ul class="pagination justify-content-center" >
           <li class="page-item">
             <a class="page-link" href="#">Previous</a>
           </li>
-          <li :class="{ 'page-item': true, 'active': page == route.params.page }" v-for="page in result.response?.meta.last_page">
-            <router-link :to="`/projects/${page}`">
-              <a class="page-link">{{ page }}</a>
-            </router-link>
+          <li :class="{ 'page-item': true, 'active': i == page }" v-for="i in Math.ceil(projectsWithScore.length / 2)">
+            <a class="page-link" href="#" @click="() => changePage(i)">{{ i }}</a>
           </li>
           <li class="page-item">
             <a class="page-link" href="#">Next</a>
           </li>
         </ul>
-      </nav> -->
+      </nav>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, watch } from "vue"
-  import { useRoute } from "vue-router"
-  import { useFetch } from "../composables/useFetch"
   import { Project } from "../models/Project.model"
-  import { Tag } from "../models/Tag.model"
   import { Profile } from "../models/Profile.model"
   import { BASE_HEADERS } from "../constants/api"
   import store from "../store"
 
-  const route = useRoute()
-  const projectsWithScore = ref()
+  const page = ref(0)
+  const projectsWithScore = ref([])
+  const projectsToDisplay = ref([])
+
 
   const sort = (a : Project, b : Project) : number => {
     a.score = a.score || 0
@@ -97,8 +94,12 @@
     return projectsWithScore
   }
 
+  const changePage = (i : number) => {
+    console.log('Change page?', i)
+    page.value = i
+  }
+
   // Runtime
-  console.log('Fetch start...')
   fetch('http://localhost:8000/api/v1/projects?match=1', {
     method: 'GET',
     headers: { ...BASE_HEADERS, Authorization: store.getToken()},
@@ -106,14 +107,15 @@
   .then((response) => response.json())
   .then((projects) => {
     const profile = store.auth.user?.profile
-    console.log('Profile?', profile)
     projectsWithScore.value = calculateScores(profile, projects.data)
+    projectsToDisplay.value = projectsWithScore.value.slice(0, 2)
   })
 
-  // watch(
-  //   () => route.params.page,
-  //   async (newPage) => {
-  //     projectsWithScore.value = useFetch<Project[]>(`projects?match&page=${newPage}`)
-  //   }
-  // )
+  watch(
+    page,
+    async (newPage) => {
+      console.log('LISTEN', newPage)
+      projectsToDisplay.value = projectsWithScore.value.slice((newPage - 1) * 2, (newPage - 1) * 2 + 2)
+    }
+  )
 </script>
