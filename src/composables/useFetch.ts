@@ -20,7 +20,7 @@ export const useFetch = <T>(endpoint: string, method: Method = "GET", body?: T) 
       method: method,
       headers: {
         ...BASE_HEADERS,
-        Authorization: `Bearer ${store?.getToken()}`,
+        Authorization: `${store?.getToken()}`,
       },
       body: body ? JSON.stringify(body) : null,
     })

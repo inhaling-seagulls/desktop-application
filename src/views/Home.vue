@@ -57,25 +57,14 @@ main {
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
+import { defineComponent } from "vue";
 import router from "../routes";
 
 export default defineComponent({
   setup() {
-    const store: any = inject("store");
-
-    const click = () => {
-      store.signIn({
-        email: "email@email.fr",
-        password: "123",
-      });
-
-      console.log(store);
-    };
-
     const test = "test";
 
-    return { test, click };
+    return { test };
   },
   methods: {
     login() {

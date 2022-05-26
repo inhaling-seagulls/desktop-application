@@ -31,24 +31,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect } from "vue";
-import { useFetch } from "./composables/useFetch";
-import { Profile } from "./models/Profile.model";
+import { defineComponent } from "vue";
 import NavigationForTest from "./components/NavigationForTest.vue";
 
 export default defineComponent({
   components: {
     NavigationForTest,
   },
-  setup() {
-    const { data, response, error } = useFetch<Profile>("profiles", "GET");
-
-    watchEffect(() => {
-      console.log(data.value);
-      console.log(response.value);
-      console.log(error.value);
-    });
-  },
+  setup() {},
   methods: {
     logout() {},
   },
