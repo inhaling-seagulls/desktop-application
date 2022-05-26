@@ -7,4 +7,5 @@ export type Project = {
   profile_id: number;
   tags: Tag[];
   id?: number;
+  score?: number;
 };
