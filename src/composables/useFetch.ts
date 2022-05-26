@@ -5,11 +5,7 @@ import store from "../store";
 
 export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
-export const useFetch = <T>(
-  endpoint: string,
-  method: Method = "GET",
-  body?: T
-) => {
+export const useFetch = <T>(endpoint: string, method: Method = "GET", body?: T) => {
   const data: Ref<T | null> = ref(null);
   const response: Ref<ApiResponse<T> | null> = ref(null);
   const error: Ref<Error | null> = ref(null);
