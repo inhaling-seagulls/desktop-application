@@ -33,8 +33,8 @@
   },
   "build": {
     "appId": "com.my-website.my-app",
-    "productName": "MyApp",
-    "copyright": "Copyright © 2019 ${author}",
+    "productName": "ProjectMatch",
+    "copyright": "Copyright © 2022 InhalingSeagulls",
     "mac": {
       "category": "public.app-category.utilities"
     },

@@ -49,9 +49,12 @@
   import { BASE_HEADERS } from "../constants/api"
   import store from "../store"
 
+
+  
+  const emptyArray :Project[] = []
   const page = ref(0)
-  const projectsWithScore = ref([])
-  const projectsToDisplay = ref([])
+  const projectsWithScore = ref([...emptyArray])
+  const projectsToDisplay = ref([...emptyArray])
 
 
   const sort = (a : Project, b : Project) : number => {
@@ -99,16 +102,25 @@
   }
 
   // Runtime
-  fetch('http://localhost:8000/api/v1/projects?match=1', {
+   const userPromise = fetch('http://localhost:8000/api/v1/me', {
     method: 'GET',
     headers: { ...BASE_HEADERS, Authorization: store.getToken()},
   })
   .then((response) => response.json())
-  .then((projects) => {
-    const profile = store.auth.user?.profile
-    projectsWithScore.value = calculateScores(profile, projects.data)
-    projectsToDisplay.value = projectsWithScore.value.slice(0, 2)
+
+  const projectsPromise = fetch('http://localhost:8000/api/v1/projects?match=1', {
+    method: 'GET',
+    headers: { ...BASE_HEADERS, Authorization: store.getToken()},
   })
+  .then((response) => response.json())
+
+  Promise.all([userPromise, projectsPromise])
+    .then(([userResponse, projectsResponse]) => {
+      const profile : Profile = userResponse.data.profile
+      const projects : Project[] = projectsResponse.data
+      projectsWithScore.value = calculateScores(profile, projects)
+      projectsToDisplay.value = projectsWithScore.value.slice(0, 2)
+    })
 
   watch(
     page,
