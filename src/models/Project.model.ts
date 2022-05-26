@@ -5,6 +5,7 @@ export type Project = {
   description: string;
   image: string;
   profile_id: number;
-  tags: Tag[] | number[];
+  tags: Tag[];
   id?: number;
+  score?: number;
 };

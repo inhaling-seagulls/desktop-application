@@ -5,11 +5,11 @@ import { User, UserRegistration, UserSignIn } from "./models/User.model";
 
 export type Store = {
   auth: Auth;
-  signIn: (user: UserSignIn) => void;
-  signUp: (user: UserRegistration) => void;
-  signOut: () => void;
+  signIn: (user: UserSignIn, callback?: () => void) => void;
+  signUp: (user: UserRegistration, callback?: () => void) => void;
+  signOut: (callback?: () => void) => void;
   getToken: () => string;
-  fetchMyData: () => User;
+  fetchMyData: (callback: () => void) => void;
 };
 
 export type Auth = {
@@ -93,7 +93,7 @@ const signOut = (callback?: () => void) => {
     });
 };
 
-const fetchMyData = () => {
+const fetchMyData = (callback: () => void) => {
   console.log(getToken());
   fetch(`${BASE_URI}/me`, {
     method: "GET",
@@ -111,6 +111,7 @@ const fetchMyData = () => {
       auth.isLoggedIn = true;
       console.log("DATA");
       console.log(auth);
+      callback()
     })
     .catch((e: Error) => {
       auth.error = e;

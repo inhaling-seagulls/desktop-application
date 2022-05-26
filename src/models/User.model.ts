@@ -6,6 +6,7 @@ export type User = {
   profile: Profile;
   id?: number;
   token?: string;
+  profile: Profile;
 };
 
 export type UserRegistration = {
