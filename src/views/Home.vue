@@ -1,15 +1,15 @@
 <style scoped>
-header {
-  text-align: center;
-  margin: 100px 0 50px;
-}
+  header {
+    text-align: center;
+    margin: 100px 0 50px;
+  }
 
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
 
 <template>
@@ -27,6 +27,7 @@ main {
               class="form-control"
               id="email"
               placeholder="name@example.com"
+              v-model="email"
             />
           </div>
           <div class="mb-3">
@@ -36,8 +37,10 @@ main {
               class="form-control"
               id="password"
               rows="3"
+              v-model="password"
             />
           </div>
+          <div v-if="store?.auth.error" class="alert alert-danger">Identifiants invalides</div>
           <button
             type="submit"
             class="btn btn-primary float-end mb-3"
@@ -47,29 +50,39 @@ main {
           </button>
         </form>
         <div class="text-center">
-          <router-link class="nav-link" to="/register"
-            >Pas de compte ?</router-link
-          >
+          <router-link class="nav-link" to="/register">Pas de compte ?</router-link>
         </div>
       </div>
     </div>
   </main>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import router from "../routes";
+<script setup lang="ts">
+  import { ref } from "vue";
+  import router from "../routes";
+  import store from "../store";
 
-export default defineComponent({
-  setup() {
-    const test = "test";
+  const email = ref('me@bewiwi.fr')
+  const password = ref('bewiwi')
 
-    return { test };
-  },
-  methods: {
-    login() {
+  const login = () => {
+    store.signIn({
+      email: email.value,
+      password: password.value,
+    }, onSignedIn)
+  };
+
+  const onSignedIn = () => {
+    if (store.auth.isLoggedIn) {
+      store.fetchMyData(onDataFetched)
+    }
+  }
+
+  const onDataFetched = () => {
+    if (store.auth.user?.profile) {
+      router.push({ path: '/projects/1' })
+    } else {
       router.push({ path: "/newprofile" });
-    },
-  },
-});
+    }
+  }
 </script>

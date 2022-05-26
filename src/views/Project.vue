@@ -1,23 +1,22 @@
 <template>
   <div class="p-4">
     <header class="custom-header mb-4">
-      <h1>Projet Pokedex</h1>
-      <h2>Réalisé par Bewiwi</h2>
+      <h1>{{ project?.name}}</h1>
+      <!-- <h2>Réalisé par <router-link :to="`/profiles/${project?.profile_id}`">{{ profile?.pseudo }}</router-link></h2> -->
       <div>🖊️</div>
     </header>
     <main>
       <div class="container-fluid">
         <div class="row">
           <div class="col-4">
-            <img src="ezaez" />
+            <img class="img-thumbnail" :src="project?.image" />
           </div>
           <div class="col-8">
             <h2>Description</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus reiciendis perspiciatis corrupti autem saepe neque commodi at earum? Dolores maiores consequuntur nesciunt cumque voluptatem id, sapiente suscipit mollitia quisquam ad.</p>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur a maxime exercitationem sunt sapiente quibusdam veritatis illo eum necessitatibus cupiditate, quam ut cumque, vitae id quidem, dolorum esse doloremque neque.</p>
+            <p>{{ project?.description }}</p>
             <div>
-              <span class="badge rounded-pill bg-primary mx-1" v-for="item in ['Angular', 'React', 'Vue', 'JavaScript', 'PHP', 'Laravel', 'Go', 'C++', 'C#', 'Money']">
-                {{ item }}
+              <span class="badge rounded-pill bg-primary mx-1" v-for="tag in project?.tags">
+                {{ tag.name }}
               </span>
             </div>
           </div>
@@ -26,3 +25,13 @@
     </main>
   </div>
 </template>
+
+<script setup lang="ts">
+  import { useRoute } from "vue-router";
+  import { useFetch } from "../composables/useFetch";
+  import { Project } from "../models/Project.model";
+
+  const route = useRoute()
+  const projectResponse = useFetch<Project>(`projects/${route.params.id}`)
+  const project = projectResponse.data
+</script>
