@@ -2,8 +2,7 @@
   <div class="p-4">
     <header class="custom-header mb-4">
       <h1>{{ project?.name}}</h1>
-      <!-- <h2>Réalisé par <router-link :to="`/profiles/${project?.profile_id}`">{{ profile?.pseudo }}</router-link></h2> -->
-      <div>🖊️</div>
+      <div> Réalisé par <router-link :to="`/profiles/${project?.profile?.id}`">{{ project.profile.pseudo }}</router-link></div>
     </header>
     <main>
       <div class="container-fluid">
@@ -15,7 +14,7 @@
             <h2>Description</h2>
             <p>{{ project?.description }}</p>
             <div>
-              <span class="badge rounded-pill bg-primary mx-1" v-for="tag in project?.tags">
+              <span class="badge rounded-pill bg-primary mx-1" v-for="tag in project?.tags" :key="tag">
                 {{ tag.name }}
               </span>
             </div>

@@ -17,7 +17,7 @@
                       <h4 class="card-title">Score: {{ project.score }}%</h4>
                       <h4 class="card-title">{{ project.name }}</h4>
                       <p class="card-text">{{ project.description }}</p>
-                      <span class="badge rounded-pill bg-primary mx-1" v-for="tag in project.tags">{{ tag.name }}</span>
+                      <span class="badge rounded-pill bg-primary mx-1" v-for="tag in project.tags" :key="tag">{{ tag.name }}</span>
                     </div>
                   </div>
               </div>
@@ -30,7 +30,7 @@
           <li class="page-item">
             <a class="page-link" href="#">Previous</a>
           </li>
-          <li :class="{ 'page-item': true, 'active': i == page }" v-for="i in Math.ceil(projectsWithScore.length / 2)">
+          <li :class="{ 'page-item': true, 'active': i == page }" v-for="i in Math.ceil(projectsWithScore.length / 2)" :key="i">
             <a class="page-link" href="#" @click="() => changePage(i)">{{ i }}</a>
           </li>
           <li class="page-item">
